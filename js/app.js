@@ -1,3 +1,4 @@
+// initiate game variables
 let enemyRow = [60, 140, 225];
 let enemyFast = [0.15, 0.20, 0.25, 0.30, 0.35, 0.40];
 let Avatars = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
@@ -39,39 +40,31 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
+// Check for collisions
 Enemy.prototype.checkCollisions = function(player1) {
   if (player1.x < this.x + 75 &&
       player1.x + 65 > this.x &&
       player1.y < this.y + 50 &&
       70 + player1.y > this.y) {
+      // On collision reset player and remove 1 life
       player1.reset();
       allLives.pop();
       gameLives--;
+      // if all lives are lost open modal
       if (gameLives === 0) {
         modal.updateScoreValue(scoreCount)
         modal.open();
       }
   }
 };
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
 // our player
 let Player = function(x,y,avatar) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+  // pick a random player avatar & place him/her at the starting point
     this.sprite = Avatars[Math.floor(Math.random() * 5)];
     this.x = 405;
     this.y = 400;
 };
-
-// Update the enemy's position, required method for game
+// Update player's position
 // Parameter: dt, a time delta between ticks
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -85,7 +78,7 @@ let player1 = new Player(); //top lane
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
+// starting point used on collision w enemies
 Player.prototype.reset = function() {
   this.x = 405;
   this.y = 400;
@@ -93,10 +86,8 @@ Player.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
 allEnemies = [enemy1, enemy2, enemy3, enemy4];
 player = player1; //placeholder
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -174,22 +165,17 @@ Gem.prototype.update = function(dt) {
           this.sprite = gemColors[Math.floor(Math.random() * 3)];
           this.x = gemColumns[Math.floor(Math.random() * 9)];
           this.y = enemyRow[Math.floor(Math.random() * 3)];
+          // add enemy
           allEnemies.push(new Enemy());
+          // increase score count
           scoreCount = scoreCount + 1;
-          console.log('score count increment: ' + scoreCount);
-          // console.log('message paragraph is now: ' + messageParagraph);
-
     }
 };
-
 // Draw the gem on the screen, required method for game
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-
 //SCORE
-// let scoreCount = 0;
 let Score = function(x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -202,7 +188,7 @@ let Score = function(x, y) {
 };
 
 let gameScore = new Score(this.x, this.y);
-// Update the Gem's position, required method for game
+// Update the score's position, required method for game
 // Parameter: dt, a time delta between ticks
 Score.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -211,8 +197,7 @@ Score.prototype.update = function(dt) {
     dt = 15;
     // Gem Collision
 };
-
-// Draw the gem on the screen, required method for game
+// Draw the score on the screen, required method for game
 Score.prototype.render = function() {
   let x = 0;
   for (let i = 0; i < scoreCount; i++){
@@ -220,12 +205,7 @@ Score.prototype.render = function() {
     x = x + 30;
   }
 };
-
-
-
-
 //LIVES
-
 let gameLives = 5;
 let Lives = function(x, y) {
     this.sprite = "images/lives.png";
@@ -257,10 +237,7 @@ Lives.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
 };
-
-
 // game over modal popup
-
 class Modal {
   constructor () {
     this.modalContainer = document.createElement('div');
@@ -300,73 +277,8 @@ class Modal {
     this.modalContainer.classList.add('open');
   }
 }
-
 let modal = new Modal();
-// modal.open();
-
-// let Modal = function() {
-//   this.modalContainer = document.createElement('div');
-//   this.modalContainer.className = 'modal';
-//   document.body.appendChild(this.modalContainer);
-//
-//   const contentContainer = document.createElement('div');
-//   contentContainer.className = 'container';
-//   this.modalContainer.appendChild(contentContainer)
-//
-//   let messageHeader = document.createElement('h1');
-//   messageHeader.className = 'message-header';
-//   messageHeader.innerHTML = 'You\'re out of lives. Game Over!';
-//   contentContainer.appendChild(messageHeader)
-//
-//   let messageParagraph = document.createElement('p');
-//   messageParagraph.className = 'message-paragraph';
-//   messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
-//   console.log(messageParagraph)
-//   contentContainer.appendChild(messageParagraph);
-//
-//   const gameOverRestart = document.createElement('button');
-//   gameOverRestart.className = 'game-over-restart';
-//   gameOverRestart.innerHTML = 'Start New Game!'
-//   contentContainer.appendChild(gameOverRestart);
-//   gameOverRestart.addEventListener('click', this.close);
-//
-//   this.content = document.createElement('div');
-//   contentContainer.appendChild(this.content);
-// };
-//
-// let modal = new Modal(scoreCount, this.messageHeader, this.messageParagraph);
-// // Update the Gem's position, required method for game
-// // Parameter: dt, a time delta between ticks
-// Modal.prototype.update = function(dt) {
-//     // You should multiply any movement by the dt parameter
-//     // which will ensure the game runs at the same speed for
-//     // all computers.
-//     dt = 15;
-//     // Gem Collision
-//     if (player1.x < this.x + 75 &&
-//         player1.x + 65 > this.x &&
-//         player1.y < this.y + 50 &&
-//         70 + player1.y > this.y) {
-//           // scoreCount = scoreCount + 1;
-//           // console.log('score count increment: ' + scoreCount);
-//           messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
-//           console.log('message paragraph is now: ' + messageParagraph);
-//
-//     }
-//
-//     set this.html (value) {
-//        this.content.innerHTML = value;
-//      }
-//      Modal.open () {
-//        this.modalContainer.classList.add('open');
-//      }
-//
-// };
-
-
 //GAME RESTARTS ON MODAL BUTTON RESTART CLICK
-
-
 let restartThisGame = document.getElementsByClassName('game-over-restart');
 restartThisGame[0].onclick = function() {
   window.location.reload();
