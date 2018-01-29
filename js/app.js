@@ -3,7 +3,7 @@ let enemyFast = [0.15, 0.20, 0.25, 0.30, 0.35, 0.40];
 let Avatars = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
 let gemColors = ['images/Gem Blue.png', 'images/Gem Orange.png', 'images/Gem Green.png'];
 let gemColumns = [0, 101, 202, 303, 404, 505, 606, 707, 808];
-
+let scoreCount = 0;
 // Enemies our player must avoid
 let Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -40,7 +40,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Enemy.prototype.checkCollisions = function(player1, scoreCount) {
+Enemy.prototype.checkCollisions = function(player1) {
   if (player1.x < this.x + 75 &&
       player1.x + 65 > this.x &&
       player1.y < this.y + 50 &&
@@ -49,6 +49,7 @@ Enemy.prototype.checkCollisions = function(player1, scoreCount) {
       allLives.pop();
       gameLives--;
       if (gameLives === 0) {
+        modal.updateScoreValue(scoreCount)
         modal.open();
       }
   }
@@ -80,7 +81,7 @@ Player.prototype.update = function(dt) {
 };
 let player1 = new Player(); //top lane
 
-// Draw the enemy on the screen, required method for game
+// Draw player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -186,7 +187,7 @@ Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-let scoreCount = 0;
+
 //SCORE
 // let scoreCount = 0;
 let Score = function(x, y) {
@@ -275,11 +276,10 @@ class Modal {
     messageHeader.innerHTML = 'You\'re out of lives. Game Over!';
     contentContainer.appendChild(messageHeader)
 
-    let messageParagraph = document.createElement('p');
-    messageParagraph.className = 'message-paragraph';
-    messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
-    console.log(messageParagraph)
-    contentContainer.appendChild(messageParagraph);
+    this.messageParagraph = document.createElement('p');
+    this.messageParagraph.className = 'message-paragraph';
+    this.messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
+    contentContainer.appendChild(this.messageParagraph);
 
     const gameOverRestart = document.createElement('button');
     gameOverRestart.className = 'game-over-restart';
@@ -289,6 +289,9 @@ class Modal {
 
     this.content = document.createElement('div');
     contentContainer.appendChild(this.content);
+  }
+  updateScoreValue(count){
+    this.messageParagraph.innerHTML = `You collected ${count} gems.`;
   }
   set html (value) {
     this.content.innerHTML = value;
