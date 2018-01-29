@@ -40,7 +40,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Enemy.prototype.checkCollisions = function(player1) {
+Enemy.prototype.checkCollisions = function(player1, scoreCount) {
   if (player1.x < this.x + 75 &&
       player1.x + 65 > this.x &&
       player1.y < this.y + 50 &&
@@ -175,6 +175,9 @@ Gem.prototype.update = function(dt) {
           this.y = enemyRow[Math.floor(Math.random() * 3)];
           allEnemies.push(new Enemy());
           scoreCount = scoreCount + 1;
+          console.log('score count increment: ' + scoreCount);
+          // console.log('message paragraph is now: ' + messageParagraph);
+
     }
 };
 
@@ -183,11 +186,9 @@ Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-
-
-
-//SCORE
 let scoreCount = 0;
+//SCORE
+// let scoreCount = 0;
 let Score = function(x, y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -274,6 +275,12 @@ class Modal {
     messageHeader.innerHTML = 'You\'re out of lives. Game Over!';
     contentContainer.appendChild(messageHeader)
 
+    let messageParagraph = document.createElement('p');
+    messageParagraph.className = 'message-paragraph';
+    messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
+    console.log(messageParagraph)
+    contentContainer.appendChild(messageParagraph);
+
     const gameOverRestart = document.createElement('button');
     gameOverRestart.className = 'game-over-restart';
     gameOverRestart.innerHTML = 'Start New Game!'
@@ -294,6 +301,70 @@ class Modal {
 let modal = new Modal();
 // modal.open();
 
-//TRY TO GET GAME TO RESTART ON MODAL BUTTON RESTART CLICK
+// let Modal = function() {
+//   this.modalContainer = document.createElement('div');
+//   this.modalContainer.className = 'modal';
+//   document.body.appendChild(this.modalContainer);
+//
+//   const contentContainer = document.createElement('div');
+//   contentContainer.className = 'container';
+//   this.modalContainer.appendChild(contentContainer)
+//
+//   let messageHeader = document.createElement('h1');
+//   messageHeader.className = 'message-header';
+//   messageHeader.innerHTML = 'You\'re out of lives. Game Over!';
+//   contentContainer.appendChild(messageHeader)
+//
+//   let messageParagraph = document.createElement('p');
+//   messageParagraph.className = 'message-paragraph';
+//   messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
+//   console.log(messageParagraph)
+//   contentContainer.appendChild(messageParagraph);
+//
+//   const gameOverRestart = document.createElement('button');
+//   gameOverRestart.className = 'game-over-restart';
+//   gameOverRestart.innerHTML = 'Start New Game!'
+//   contentContainer.appendChild(gameOverRestart);
+//   gameOverRestart.addEventListener('click', this.close);
+//
+//   this.content = document.createElement('div');
+//   contentContainer.appendChild(this.content);
+// };
+//
+// let modal = new Modal(scoreCount, this.messageHeader, this.messageParagraph);
+// // Update the Gem's position, required method for game
+// // Parameter: dt, a time delta between ticks
+// Modal.prototype.update = function(dt) {
+//     // You should multiply any movement by the dt parameter
+//     // which will ensure the game runs at the same speed for
+//     // all computers.
+//     dt = 15;
+//     // Gem Collision
+//     if (player1.x < this.x + 75 &&
+//         player1.x + 65 > this.x &&
+//         player1.y < this.y + 50 &&
+//         70 + player1.y > this.y) {
+//           // scoreCount = scoreCount + 1;
+//           // console.log('score count increment: ' + scoreCount);
+//           messageParagraph.innerHTML = `You collected ${scoreCount} gems.`;
+//           console.log('message paragraph is now: ' + messageParagraph);
+//
+//     }
+//
+//     set this.html (value) {
+//        this.content.innerHTML = value;
+//      }
+//      Modal.open () {
+//        this.modalContainer.classList.add('open');
+//      }
+//
+// };
+
+
+//GAME RESTARTS ON MODAL BUTTON RESTART CLICK
+
+
 let restartThisGame = document.getElementsByClassName('game-over-restart');
-restartThisGame.onclick = function () {window.location.reload()}
+restartThisGame[0].onclick = function() {
+  window.location.reload();
+};
